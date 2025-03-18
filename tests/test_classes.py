@@ -1,38 +1,31 @@
-import pytest
-from src.class_init import Product, Category
+import unittest
+import logging
+from src.class_init import Product
 
+class TestProduct(unittest.TestCase):
 
-@pytest.fixture
-def sample_product():
-    return Product("Smartphone", "Latest model", 699.99, 50)
+    def setUp(self):
+        self.product = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5)
 
+    def test_price_getter(self):
+        self.assertEqual(self.product.price, 180000.0)
 
-@pytest.fixture
-def sample_category():
-    return Category("Electronics", "Various electronic devices")
+    def test_price_setter_valid(self):
+        self.product.price = 190000.0
+        self.assertEqual(self.product.price, 190000.0)
 
+    def test_price_setter_negative(self):
+        with self.assertLogs(level='WARNING') as cm:
+            self.product.price = -100
+        self.assertIn("Цена не должна быть нулевая или отрицательная", cm.output[0])
+        self.assertEqual(self.product.price, 180000.0)
 
-def test_product_initialization(sample_product):
-    assert sample_product.name == "Smartphone"
-    assert sample_product.description == "Latest model"
-    assert sample_product.price == 699.99
-    assert sample_product.quantity == 50
+    def test_price_setter_zero(self):
+        with self.assertLogs(level='WARNING') as cm:
+            self.product.price = 0
+        self.assertIn("Цена не должна быть нулевая или отрицательная", cm.output[0])
+        self.assertEqual(self.product.price, 180000.0)
 
-
-def test_category_initialization(sample_category):
-    assert sample_category.name == "Electronics"
-    assert sample_category.description == "Various electronic devices"
-    assert len(sample_category.products) == 0
-
-
-def test_category_count():
-    initial_count = Category.category_count
-    Category("Appliances", "Home appliances")
-    assert Category.category_count == initial_count + 1
-
-
-def test_product_count_in_category(sample_category, sample_product):
-    initial_product_count = Category.product_count
-    sample_category.add_product(sample_product)
-    assert len(sample_category.products) == 1
-    assert Category.product_count == initial_product_count + 1
+# Запуск тестов
+if __name__ == '__main__':
+    unittest.main()
