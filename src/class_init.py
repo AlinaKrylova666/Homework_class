@@ -4,19 +4,19 @@ class Product:
     def __init__(self, name, description, price, quantity):
         self.name = name
         self.description = description
-        self._price = price  # Приватный атрибут
+        self.__price = price  # Приватный атрибут с двойным подчеркиванием
         self.quantity = quantity
 
     @property
     def price(self):
-        return self._price
+        return self.__price
 
     @price.setter
     def price(self, value):
         if value <= 0:
             logging.warning("Цена не должна быть нулевая или отрицательная")
         else:
-            self._price = value
+            self.__price = value
 
     @classmethod
     def new_product(cls, product_info):
@@ -27,6 +27,7 @@ class Product:
             product_info['quantity']
         )
 
+# Остальной код без изменений
 class Category:
     category_count = 0
     product_count = 0
