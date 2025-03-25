@@ -1,5 +1,5 @@
 import pytest
-from src.product import Smartphone, LawnGrass
+from src.product import Smartphone, LawnGrass, Product
 
 def test_smartphone_creation():
     smartphone = Smartphone("iPhone 15", "512GB, Gray space", 210000.0, 8, "High", "15", "512GB", "Gray")
