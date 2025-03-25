@@ -1,5 +1,12 @@
 import pytest
-from src.product import Smartphone, LawnGrass
+from src.product import Smartphone, LawnGrass, Product
+
+def test_product_creation():
+    product = Product("Продукт1", "Описание продукта", 1200, 10)
+    assert product.name == "Продукт1"
+    assert product.description == "Описание продукта"
+    assert product.price == 1200
+    assert product.quantity == 10
 
 def test_smartphone_creation():
     smartphone = Smartphone("iPhone 15", "512GB, Gray space", 210000.0, 8, "High", "15", "512GB", "Gray")

@@ -1,22 +1,13 @@
-import logging
+from src.base_product import BaseProduct
 
-class Product:
+class LoggingMixin:
+    def __init__(self, *args, **kwargs):
+        class_name = self.__class__.__name__
+        print(f"{class_name} создан с параметрами: {args}, {kwargs}")
+
+class Product(LoggingMixin, BaseProduct):
     def __init__(self, name, description, price, quantity):
-        self.name = name
-        self.description = description
-        self.__price = price  # Приватный атрибут с двойным подчеркиванием
-        self.quantity = quantity
-
-    @property
-    def price(self):
-        return self.__price
-
-    @price.setter
-    def price(self, value):
-        if value <= 0:
-            logging.warning("Цена не должна быть нулевая или отрицательная")
-        else:
-            self.__price = value
+        super().__init__(name, description, price, quantity)  # Инициализация атрибутов из BaseProduct
 
     def __str__(self):
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
