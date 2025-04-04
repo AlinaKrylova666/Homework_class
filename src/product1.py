@@ -7,7 +7,7 @@ class LoggingMixin:
 
 class Product(LoggingMixin, BaseProduct):
     def __init__(self, name, description, price, quantity):
-        super().__init__(name, description, price, quantity)  # Инициализация атрибутов из BaseProduct
+        super().__init__(name, description, price, quantity)
 
     def __str__(self):
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."

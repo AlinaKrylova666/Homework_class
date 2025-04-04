@@ -9,7 +9,7 @@ class Category:
             products = []
         self.name = name
         self.description = description
-        self.__products = products
+        self.__products = products  # Инициализация приватного атрибута
 
         Category.category_count += 1
         Category._total_product_count += len(products)

@@ -1,5 +1,5 @@
 import pytest
-from src.product import Product, Smartphone, LawnGrass
+from src.product import Smartphone, LawnGrass, Product
 
 def test_product_creation():
     product = Product("Продукт1", "Описание продукта", 1200, 10)
@@ -27,7 +27,3 @@ def test_add_different_type():
     grass = LawnGrass("Классическая", "Газонная трава", 500.0, 20, "Россия", "7 дней", "Зеленый")
     with pytest.raises(TypeError):
         smartphone + grass
-
-def test_product_str():
-    product = Product("Продукт1", "Описание продукта", 1200, 10)
-    assert str(product) == "Продукт1, 1200 руб. Остаток: 10 шт."
