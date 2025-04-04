@@ -1,38 +1,58 @@
-import pytest
+import unittest
 from src.class_init import Product, Category
 
+class TestProduct(unittest.TestCase):
 
-@pytest.fixture
-def sample_product():
-    return Product("Smartphone", "Latest model", 699.99, 50)
+    def setUp(self):
+        self.product1 = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5)
+        self.product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
+        self.product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
 
+    def test_price_getter(self):
+        self.assertEqual(self.product1.price, 180000.0)
 
-@pytest.fixture
-def sample_category():
-    return Category("Electronics", "Various electronic devices")
+    def test_price_setter_valid(self):
+        self.product1.price = 190000.0
+        self.assertEqual(self.product1.price, 190000.0)
 
+    def test_price_setter_negative(self):
+        with self.assertLogs(level='WARNING') as cm:
+            self.product1.price = -100
+        self.assertIn("Цена не должна быть нулевая или отрицательная", cm.output[0])
+        self.assertEqual(self.product1.price, 180000.0)
 
-def test_product_initialization(sample_product):
-    assert sample_product.name == "Smartphone"
-    assert sample_product.description == "Latest model"
-    assert sample_product.price == 699.99
-    assert sample_product.quantity == 50
+    def test_price_setter_zero(self):
+        with self.assertLogs(level='WARNING') as cm:
+            self.product1.price = 0
+        self.assertIn("Цена не должна быть нулевая или отрицательная", cm.output[0])
+        self.assertEqual(self.product1.price, 180000.0)
 
+    def test_product_str_representation(self):
+        expected_str = "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."
+        self.assertEqual(str(self.product1), expected_str)
 
-def test_category_initialization(sample_category):
-    assert sample_category.name == "Electronics"
-    assert sample_category.description == "Various electronic devices"
-    assert len(sample_category.products) == 0
+    def test_product_addition(self):
+        # Проверка сложения двух продуктов
+        total_value = self.product1 + self.product2
+        expected_value = (180000.0 * 5) + (210000.0 * 8)
+        self.assertEqual(total_value, expected_value)
 
+class TestCategory(unittest.TestCase):
 
-def test_category_count():
-    initial_count = Category.category_count
-    Category("Appliances", "Home appliances")
-    assert Category.category_count == initial_count + 1
+    def setUp(self):
+        self.product1 = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5)
+        self.product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
+        self.product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+        self.category = Category(
+            "Смартфоны",
+            "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
+            [self.product1, self.product2, self.product3]
+        )
 
+    def test_category_str_representation(self):
+        expected_str = "Смартфоны, количество продуктов: 27 шт."
+        self.assertEqual(str(self.category), expected_str)
 
-def test_product_count_in_category(sample_category, sample_product):
-    initial_product_count = Category.product_count
-    sample_category.add_product(sample_product)
-    assert len(sample_category.products) == 1
-    assert Category.product_count == initial_product_count + 1
+# Запуск тестов
+if __name__ == '__main__':
+    unittest.main()
